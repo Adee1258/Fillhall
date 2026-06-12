@@ -6,7 +6,7 @@ dns.setDefaultResultOrder('ipv4first');
 
 const listingSchema = new mongoose.Schema({
   business_name:      { type: String, required: true },
-  category:           { type: String, required: true },
+  category:           { type: String, default: 'venue' },
   location:           String,
   guest_capacity:     Number,
   guest_capacity_min: Number,
