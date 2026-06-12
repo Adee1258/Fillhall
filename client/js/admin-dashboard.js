@@ -85,8 +85,11 @@ function renderTable(listings) {
   }
 
   listings.forEach(listing => {
-    const logoHTML = listing.logo
-      ? `<img class="table-logo" src="/uploads/${listing.logo}" alt="logo">`
+    const logoSrc = listing.logo
+      ? (listing.logo.startsWith('http') ? listing.logo : `/uploads/${listing.logo}`)
+      : null;
+    const logoHTML = logoSrc
+      ? `<img class="table-logo" src="${logoSrc}" alt="logo" onerror="this.style.display='none'">`
       : `<span class="no-logo-icon">🏛️</span>`;
 
     const guestMin = listing.guest_capacity_min || '';
@@ -161,7 +164,9 @@ async function editListing(id) {
     const previewWrap = document.getElementById('logoPreviewWrap');
     const previewImg  = document.getElementById('logoPreview');
     if (listing.logo) {
-      previewImg.src = `/uploads/${listing.logo}`;
+      previewImg.src = listing.logo.startsWith('http')
+        ? listing.logo
+        : `/uploads/${listing.logo}`;
       previewWrap.style.display = 'block';
     } else {
       previewWrap.style.display = 'none';

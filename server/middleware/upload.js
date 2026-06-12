@@ -1,21 +1,38 @@
-const multer = require('multer');
-const path   = require('path');
-const fs     = require('fs');
+const multer  = require('multer');
+const path    = require('path');
+const fs      = require('fs');
+const cloudinary         = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-// On Vercel there is no writable disk — use memory storage
-const isVercel = !!process.env.VERCEL;
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const useCloudinary = !!(
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_API_KEY   &&
+  process.env.CLOUDINARY_API_SECRET
+);
 
 let storage;
 
-if (isVercel) {
-  // Memory storage — file available as buffer but not saved to disk
-  storage = multer.memoryStorage();
+if (useCloudinary) {
+  // Cloudinary storage — works on Vercel & anywhere
+  storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder:         'fillhall',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+      transformation: [{ width: 400, height: 400, crop: 'limit', quality: 'auto' }]
+    }
+  });
 } else {
-  // Local disk storage
+  // Local disk storage (development)
   const uploadDir = path.join(__dirname, '../uploads');
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
+  if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
   storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadDir),
@@ -28,16 +45,11 @@ if (isVercel) {
 
 const fileFilter = (req, file, cb) => {
   const allowed = /jpeg|jpg|png|gif|webp/;
-  const ext     = allowed.test(path.extname(file.originalname).toLowerCase());
-  const mime    = allowed.test(file.mimetype);
-  if (ext && mime) cb(null, true);
-  else cb(new Error('Only image files are allowed'));
+  if (allowed.test(path.extname(file.originalname).toLowerCase()) && allowed.test(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed'));
+  }
 };
 
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
-});
-
-module.exports = upload;
+module.exports = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } });

@@ -925,8 +925,12 @@
         const loc     = v.location || 'Multan';
         const budget  = !!v.budget;
 
-        const logoHTML = v.logo
-          ? `<img class="card-logo-img" src="/uploads/${v.logo}" alt="${v.business_name}">`
+        // logo can be Cloudinary URL (http...) or local filename
+        const logoSrc = v.logo
+          ? (v.logo.startsWith('http') ? v.logo : `/uploads/${v.logo}`)
+          : null;
+        const logoHTML = logoSrc
+          ? `<img class="card-logo-img" src="${logoSrc}" alt="${v.business_name}" onerror="this.parentElement.innerHTML='<div class=card-icon-wrap>${icon}</div>'">`
           : `<div class="card-icon-wrap">${icon}</div>`;
 
         const card = document.createElement('div');
