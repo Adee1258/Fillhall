@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Force IPv4 first — fixes DNS SRV timeout on many Pakistani ISPs
+dns.setDefaultResultOrder('ipv4first');
 
 const listingSchema = new mongoose.Schema({
   business_name:      { type: String, required: true },
@@ -18,10 +22,15 @@ const Listing = mongoose.model('Listing', listingSchema);
 
 const initDatabase = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 15000,
+      socketTimeoutMS: 45000,
+      family: 4
+    });
     console.log('MongoDB connected ✓');
   } catch (error) {
     console.error('MongoDB connection error:', error.message);
+    console.log('Server will continue running — DB features may not work until connection is established.');
   }
 };
 
