@@ -1,15 +1,28 @@
-const Datastore = require('nedb-promises');
-const path = require('path');
+const mongoose = require('mongoose');
 
-// Data files — saved locally in server/data/
-const Listing = Datastore.create({
-  filename: path.join(__dirname, '../data/listings.db'),
-  autoload: true
-});
+const listingSchema = new mongoose.Schema({
+  business_name:      { type: String, required: true },
+  category:           { type: String, required: true },
+  location:           String,
+  guest_capacity:     Number,
+  guest_capacity_min: Number,
+  guest_capacity_max: Number,
+  budget:             String,
+  description:        String,
+  whatsapp_number:    { type: String, required: true },
+  logo:               String,
+  status:             { type: String, enum: ['active', 'inactive'], default: 'active' }
+}, { timestamps: true });
 
-// Auto-increment helper (nedb uses random _id by default, we keep it as-is)
+const Listing = mongoose.model('Listing', listingSchema);
+
 const initDatabase = async () => {
-  console.log('Local database ready (nedb) ✓');
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('MongoDB connected ✓');
+  } catch (error) {
+    console.error('MongoDB connection error:', error.message);
+  }
 };
 
 module.exports = { Listing, initDatabase };
