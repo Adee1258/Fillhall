@@ -1,5 +1,7 @@
 const { Listing } = require('../models/db');
 
+const isVercel = !!process.env.VERCEL;
+
 const getAllListings = async (req, res) => {
   try {
     const listings = await Listing.find({ status: 'active' }).sort({ createdAt: -1 });
@@ -22,7 +24,10 @@ const getListingById = async (req, res) => {
 const createListing = async (req, res) => {
   try {
     const data = { ...req.body };
-    if (req.file) data.logo = req.file.filename;
+    // Local: save filename. Vercel: no disk, skip logo for now
+    if (req.file && !isVercel) {
+      data.logo = req.file.filename;
+    }
     if (!data.status) data.status = 'active';
     const listing = new Listing(data);
     await listing.save();
@@ -35,7 +40,9 @@ const createListing = async (req, res) => {
 const updateListing = async (req, res) => {
   try {
     const data = { ...req.body };
-    if (req.file) data.logo = req.file.filename;
+    if (req.file && !isVercel) {
+      data.logo = req.file.filename;
+    }
     const listing = await Listing.findByIdAndUpdate(req.params.id, data, { new: true });
     if (!listing) return res.status(404).json({ message: 'Listing not found' });
     res.json({ message: 'Listing updated successfully' });
