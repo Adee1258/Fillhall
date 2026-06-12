@@ -23,7 +23,7 @@ form.addEventListener('submit', async (e) => {
       localStorage.setItem('token', data.token);
       window.location.href = 'admin-dashboard.html';
     } else {
-      errorMsg.textContent = 'Invalid email or password.';
+      errorMsg.textContent = 'Invalid username or password.';
       errorMsg.classList.add('show');
       loginBtn.textContent = 'Sign In to Dashboard';
       loginBtn.disabled = false;
