@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FillHall – Admin Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: #220008;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Background orbs */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(90,0,20,0.8) 0%, transparent 70%);
+      top: -200px; left: -200px;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%);
+      bottom: -100px; right: -100px;
+      pointer-events: none;
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 420px;
+      padding: 1rem;
+      position: relative;
+      z-index: 10;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(30px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* Card */
+    .login-card {
+      background: linear-gradient(145deg, rgba(74,0,16,0.92), rgba(34,0,8,0.97));
+      border: 1px solid rgba(212,168,67,0.25);
+      border-radius: 24px;
+      padding: 2.75rem 2.5rem;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,168,67,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #d4a843, #f0cc70, #d4a843, transparent);
+    }
+
+    /* Logo */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-logo-ring {
+      width: 64px; height: 64px;
+      border: 2px solid #d4a843;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; color: #d4a843;
+      background: rgba(212,168,67,0.07);
+      box-shadow: 0 0 0 8px rgba(212,168,67,0.05), 0 0 30px rgba(212,168,67,0.15);
+      margin-bottom: 0.9rem;
+    }
+
+    .login-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #d4a843;
+      letter-spacing: 0.15rem;
+      display: block;
+      text-transform: uppercase;
+    }
+
+    .login-sub {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.15rem;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* Gold divider */
+    .g-divider {
+      width: 50px; height: 1px;
+      background: linear-gradient(90deg, transparent, #d4a843, transparent);
+      margin: 0 auto 2rem;
+    }
+
+    /* Form */
+    .form-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1rem;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-field {
+      position: relative;
+      margin-bottom: 1.4rem;
+    }
+
+    .form-field input {
+      width: 100%;
+      padding: 0.9rem 1rem 0.9rem 2.75rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(212,168,67,0.2);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 0.92rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .form-field input::placeholder { color: rgba(255,255,255,0.25); }
+
+    .form-field input:focus {
+      border-color: #d4a843;
+      background: rgba(212,168,67,0.05);
+      box-shadow: 0 0 0 3px rgba(212,168,67,0.1);
+    }
+
+    .field-icon {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      color: rgba(212,168,67,0.5);
+      pointer-events: none;
+    }
+
+    /* Error msg */
+    .error-msg {
+      background: rgba(220,53,69,0.12);
+      border: 1px solid rgba(220,53,69,0.3);
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      font-size: 0.8rem;
+      color: #ff8a94;
+      margin-bottom: 1.2rem;
+      display: none;
+      text-align: center;
+    }
+
+    .error-msg.show { display: block; }
+
+    /* Login button */
+    .login-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #d4a843, #f0cc70, #d4a843);
+      background-size: 200% 100%;
+      color: #220008;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 6px 22px rgba(212,168,67,0.35);
+      margin-bottom: 1.2rem;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(212,168,67,0.5);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .back-link {
+      text-align: center;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .back-link a {
+      color: rgba(212,168,67,0.7);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .back-link a:hover { color: #d4a843; }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrap">
+    <div class="login-card">
+
+      <div class="login-logo">
+        <div class="login-logo-ring">✦</div>
+        <span class="login-brand">FillHall</span>
+        <span class="login-sub">Admin Panel</span>
+      </div>
+
+      <div class="g-divider"></div>
+
+      <form id="loginForm" autocomplete="off">
+
+        <div class="error-msg" id="errorMsg">Invalid username or password.</div>
+
+        <div class="form-field">
+          <label class="form-label">Username</label>
+          <span class="field-icon">👤</span>
+          <input type="text" id="email" placeholder="admin" required>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Password</label>
+          <span class="field-icon">🔒</span>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">Sign In to Dashboard</button>
+
+        <div class="back-link">
+          <a href="welcome.html">← Back to Website</a>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <script src="js/admin-login.js"></script>
+</body>
+</html>

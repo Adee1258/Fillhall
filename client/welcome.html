@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FillHall – Luxury Wedding Concierge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --gold:        #d4a843;
+      --gold-light:  #f0cc70;
+      --gold-dim:    rgba(212,168,67,0.15);
+      --maroon:      #3b0010;
+      --maroon-mid:  #520015;
+      --maroon-dark: #1e0008;
+      --green:       #25d366;
+      --white:       #ffffff;
+      --cream:       #fdf6ec;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--maroon-dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 2.5rem;
+      background: linear-gradient(90deg, rgba(82,0,21,0.95), rgba(59,0,16,0.95));
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(212,168,67,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+    }
+
+    .nav-ring {
+      width: 34px; height: 34px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .nav-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.06rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1rem;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-book {
+      padding: 0.5rem 1.3rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--maroon-dark);
+      border: none;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 3px 14px rgba(212,168,67,0.3);
+    }
+    .nav-book:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(212,168,67,0.45); }
+
+    /* ══════════ PAGE 1 — HERO ══════════ */
+    .hero {
+      min-height: calc(100vh - 57px);
+      background:
+        radial-gradient(ellipse 90% 70% at 50% -10%, rgba(100,0,28,0.95) 0%, transparent 65%),
+        linear-gradient(175deg, #280008 0%, #4a0014 45%, #280008 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, transparent 5%, var(--gold) 40%, var(--gold-light) 50%, var(--gold) 60%, transparent 95%);
+    }
+
+    /* Glow orb (Parallax) */
+    .parallax-orb {
+      position: absolute; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,168,67,0.07) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      pointer-events: none; z-index: 1; transition: transform 0.15s ease-out;
+    }
+
+    .hero-badge {
+      width: 68px; height: 68px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; color: var(--gold);
+      background: rgba(212,168,67,0.05);
+      box-shadow: 0 0 0 10px rgba(212,168,67,0.05), 0 0 50px rgba(212,168,67,0.12);
+      margin-bottom: 1rem;
+      animation: badgePulse 3s ease-in-out infinite;
+      position: relative; z-index: 2;
+    }
+
+    @keyframes badgePulse {
+      0%,100% { box-shadow: 0 0 0 10px rgba(212,168,67,0.05), 0 0 50px rgba(212,168,67,0.12); }
+      50%      { box-shadow: 0 0 0 16px rgba(212,168,67,0.08), 0 0 70px rgba(212,168,67,0.22); }
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.2rem;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+      text-shadow: 0 0 40px rgba(212,168,67,0.25);
+      position: relative; z-index: 2;
+    }
+
+    .hero-divider {
+      width: 70px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0.6rem auto 1rem;
+      position: relative; z-index: 2;
+    }
+
+    .hero-tagline {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.88);
+      letter-spacing: 0.04rem;
+      line-height: 1.65;
+      margin-bottom: 2.2rem;
+      max-width: 380px;
+      position: relative; z-index: 2;
+    }
+    .hero-tagline strong { color: var(--gold-light); font-weight: 600; }
+
+    .chat-wrapper {
+      position: relative;
+      margin-top: 5.5rem;
+      margin-bottom: 1.5rem;
+      width: 100%;
+      max-width: 340px;
+      z-index: 2;
+    }
+
+    /* Chat card */
+    .chat-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 1.1rem 1.3rem;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 20px 55px rgba(0,0,0,0.45);
+      text-align: left;
+    }
+
+    .zara-pop-avatar {
+      position: absolute;
+      top: -110px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      border: 4px solid #ffffff;
+      z-index: 1;
+    }
+
+    .chat-wa-dot {
+      position: absolute;
+      top: -11px; right: -11px;
+      width: 34px; height: 34px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 3px 12px rgba(37,211,102,0.45);
+    }
+
+    .chat-head {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .chat-avi {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e8c4a0, #c4856a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .online-dot {
+      width: 9px; height: 9px;
+      background: var(--green);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 1px; right: 1px;
+    }
+
+    .chat-info-name { font-size: 0.82rem; font-weight: 700; color: #111; line-height: 1.2; }
+    .chat-info-status { font-size: 0.68rem; color: var(--green); font-weight: 500; }
+    .chat-dots { margin-left: auto; color: #bbb; font-size: 1rem; cursor: pointer; }
+
+    .chat-bubble {
+      background: #f4f4f4;
+      border-radius: 3px 14px 14px 14px;
+      padding: 0.8rem 1rem;
+      font-size: 0.8rem;
+      color: #2a2a2a;
+      line-height: 1.65;
+      min-height: 60px;
+    }
+    .chat-bubble b { display: block; margin-bottom: 0.25rem; color: #111; font-size: 0.84rem; }
+    .chat-link { color: #b8860b; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+    
+    .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 5px 0; }
+    .typing-indicator span {
+      display: inline-block; width: 6px; height: 6px; background: var(--gold);
+      border-radius: 50%;
+      animation: typingBounce 1.2s infinite ease-in-out;
+    }
+    .typing-indicator span:nth-child(1) { animation-delay: 0s; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(-4px); opacity: 1; } }
+
+    /* Pills */
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      max-width: 360px;
+      position: relative; z-index: 2;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(212,168,67,0.08);
+      border: 1px solid rgba(212,168,67,0.25);
+      border-radius: 50px;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--gold-light);
+      letter-spacing: 0.02rem;
+    }
+
+    /* WhatsApp button */
+    .wa-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      max-width: 340px;
+      padding: 0.95rem;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.08rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(37,211,102,0.38);
+      transition: all 0.3s;
+      margin-bottom: 0.65rem;
+      margin-bottom: 0.65rem;
+      position: relative; z-index: 2;
+      animation: waPulse 2.5s ease-in-out infinite;
+    }
+
+    .couple-illustration {
+      position: absolute;
+      bottom: 0;
+      right: 5%;
+      width: 130px;
+      height: auto;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .couple-illustration-2 {
+      position: absolute;
+      bottom: -10px;
+      right: 10px;
+      width: 100px;
+      height: auto;
+      z-index: 5;
+      pointer-events: none;
+    }
+    @keyframes waPulse {
+      0%,100% { box-shadow: 0 6px 24px rgba(37,211,102,0.38); }
+      50%      { box-shadow: 0 6px 36px rgba(37,211,102,0.6); }
+    }
+    .wa-btn:hover { transform: translateY(-2px); }
+
+    .hero-note {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.45);
+      position: relative; z-index: 2;
+    }
+    .hero-note span { color: rgba(212,168,67,0.8); font-weight: 600; }
+
+    .page-footer {
+      text-align: center;
+      padding: 0.8rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.82rem;
+      color: var(--gold);
+      letter-spacing: 0.2rem;
+      border-top: 1px solid rgba(212,168,67,0.12);
+    }
+
+    /* ══════════ PAGE 2 — DIRECTORY ══════════ */
+    .directory {
+      min-height: calc(100vh - 57px);
+      background:
+        radial-gradient(ellipse 80% 60% at 80% 80%, rgba(90,0,24,0.5) 0%, transparent 60%),
+        linear-gradient(175deg, #1e0008 0%, #420012 50%, #1e0008 100%);
+      padding: 2rem 1.5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .directory::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, transparent 5%, var(--gold) 40%, var(--gold-light) 50%, var(--gold) 60%, transparent 95%);
+    }
+
+    .dir-header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .dir-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18rem;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(212,168,67,0.08);
+      border: 1px solid rgba(212,168,67,0.22);
+      border-radius: 50px;
+      padding: 0.28rem 1rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .dir-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.07rem;
+      line-height: 1.3;
+    }
+
+    /* ══ CARDS GRID ══ */
+    .venues-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .venue-card {
+      background: linear-gradient(145deg, rgba(72,0,18,0.4), rgba(26,0,8,0.8));
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(212,168,67,0.3);
+      border-radius: 16px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .venue-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(212,168,67,0.8), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .venue-card:hover {
+      border-color: rgba(212,168,67,0.8);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(212,168,67,0.25);
+    }
+    .venue-card:hover::before { opacity: 1; }
+
+    /* Icon / Logo */
+    .card-icon-wrap {
+      width: 80px; height: 80px;
+      border-radius: 16px;
+      background: rgba(212,168,67,0.08);
+      border: 1px solid rgba(212,168,67,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+      margin: 0 auto 0.9rem;
+    }
+
+    .card-logo-img {
+      width: 80px; height: 80px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 2px solid rgba(212,168,67,0.35);
+      display: block;
+      margin: 0 auto 0.9rem;
+    }
+
+    .card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.04rem;
+      line-height: 1.35;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-loc {
+      display: inline-block;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 0.1rem 0.45rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      text-align: left;
+    }
+
+    .card-feat {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.75);
+    }
+    .cf-pin   { color: var(--gold); font-size: 0.65rem; }
+    .cf-check { color: var(--green); font-weight: 700; font-size: 0.65rem; }
+    .cf-pax   { color: var(--gold-light); font-size: 0.65rem; }
+
+    /* Loading */
+    .loading-cards {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: rgba(212,168,67,0.55);
+      font-size: 0.82rem;
+      letter-spacing: 0.06rem;
+    }
+
+    /* CTA Banner */
+    .cta-wrap {
+      max-width: 900px;
+      margin: 0 auto 0.5rem;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(70,0,18,0.95), rgba(26,0,8,0.98));
+      border: 1px solid rgba(212,168,67,0.35);
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+    }
+
+    .cta-star {
+      position: absolute;
+      top: 12px; right: 14px;
+      color: var(--gold);
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .cta-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.88);
+      text-transform: uppercase;
+      letter-spacing: 0.06rem;
+      line-height: 1.65;
+      margin-bottom: 0.9rem;
+    }
+    .cta-text .g { color: var(--gold-light); }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
+      color: var(--maroon-dark);
+      border: none;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(212,168,67,0.32);
+      transition: all 0.3s;
+      margin-bottom: 0.5rem;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(212,168,67,0.5); }
+
+    .cta-sub {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.03rem;
+    }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 700px) {
+      .venues-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 0.75rem;
+        padding-bottom: 1.5rem;
+        scrollbar-width: none; /* Firefox */
+      }
+      .venues-grid::-webkit-scrollbar { display: none; /* Safari and Chrome */ }
+      .venue-card {
+        flex: 0 0 auto;
+        width: calc(100% / 3.5); /* Shows ~3.5 cards */
+        scroll-snap-align: start;
+        padding: 1rem 0.6rem;
+      }
+      .card-name { font-size: 0.65rem; }
+      .card-loc { font-size: 0.55rem; margin-bottom: 0.4rem; padding: 0.1rem 0.3rem; }
+      .card-feat { font-size: 0.55rem; }
+      .cf-pin, .cf-check, .cf-pax { font-size: 0.55rem; }
+      .card-icon-wrap { width: 60px; height: 60px; font-size: 1.6rem; margin-bottom: 0.6rem; }
+      .card-logo-img { width: 60px; height: 60px; margin-bottom: 0.6rem; }
+      .hero-title { font-size: 2.4rem; }
+      .navbar { padding: 0.85rem 1.25rem; }
+      .nav-links a:not(:last-child) { display: none; }
+    }
+
+    @media (max-width: 420px) {
+      .venue-card { width: calc(100% / 3.2); }
+      .hero-title { font-size: 2rem; }
+      .dir-title { font-size: 1.3rem; }
+    }
+
+    /* ══════════ FEATURES SECTION ══════════ */
+    .features-section {
+      padding: 5rem 1.5rem;
+      background: linear-gradient(180deg, #1e0008 0%, #350010 50%, #1e0008 100%);
+      text-align: center;
+      border-bottom: 1px solid rgba(212,168,67,0.1);
+    }
+    .feat-title {
+      font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold);
+      margin-bottom: 3rem; text-transform: uppercase; letter-spacing: 0.15rem;
+    }
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 900px; margin: 0 auto;
+    }
+    .feat-box {
+      background: rgba(20,0,6,0.5); border: 1px solid rgba(212,168,67,0.15); border-radius: 16px;
+      padding: 2.5rem 1.5rem; transition: transform 0.4s, box-shadow 0.4s;
+    }
+    .feat-box:hover {
+      transform: translateY(-8px); box-shadow: 0 15px 35px rgba(212,168,67,0.2); border-color: rgba(212,168,67,0.5);
+    }
+    .feat-icon { font-size: 2.8rem; margin-bottom: 1.2rem; color: var(--gold-light); }
+    .feat-box h3 { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.1rem; color: #fff; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05rem; }
+    .feat-box p { font-size: 0.85rem; color: rgba(255,255,255,0.65); line-height: 1.6; }
+    @media(max-width: 700px) { .feat-grid { grid-template-columns: 1fr; gap: 1.2rem; } .feat-title { font-size: 1.6rem; } }
+
+    /* ══════════ LOADER & REVEAL ══════════ */
+    .loader-wrap {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: var(--maroon-dark); z-index: 99999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), visibility 0.8s;
+    }
+    .loader-ring {
+      font-size: 3rem; color: var(--gold);
+      animation: spinGlow 2s infinite cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    .loader-text {
+      font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--gold);
+      margin-top: 1.2rem; letter-spacing: 0.25rem; text-transform: uppercase;
+      animation: pulseText 2s infinite; text-shadow: 0 0 15px rgba(212,168,67,0.4);
+    }
+    @keyframes spinGlow {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); text-shadow: 0 0 40px rgba(212,168,67,0.8); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+    @keyframes pulseText { 0%,100% { opacity:0.7;} 50% {opacity:1;} }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .fu { animation: fadeUp 0.6s ease both; }
+    .fu1 { animation-delay: 0.05s; }
+    .fu2 { animation-delay: 0.15s; }
+    .fu3 { animation-delay: 0.28s; }
+    .fu4 { animation-delay: 0.42s; }
+    .fu5 { animation-delay: 0.55s; }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOADER ══ -->
+<div id="loader" class="loader-wrap">
+  <div class="loader-ring">✦</div>
+  <div class="loader-text">FillHall</div>
+</div>
+
+<!-- ══ SINGLE NAVBAR ══ -->
+<nav class="navbar">
+  <a class="nav-brand" href="#" id="secretAdminLink">
+    <div class="nav-ring">✦</div>
+    <span class="nav-name">FillHall</span>
+  </a>
+  <div class="nav-links">
+    <a href="about.html">About Us</a>
+    <button class="nav-book" onclick="document.getElementById('directory').scrollIntoView({behavior:'smooth'})">Book Now</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     PAGE 1 — HERO
+══════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="parallax-orb" id="parallaxOrb"></div>
+
+  <div class="hero-badge fu fu1">✦</div>
+
+  <h1 class="hero-title fu fu2">FillHall</h1>
+  <div class="hero-divider fu fu2"></div>
+
+  <p class="hero-tagline fu fu2">
+    Zara AI Wedding Concierge —<br>
+    <strong>Your Key to Effortless Weddings</strong>
+  </p>
+
+  <!-- Chat Box -->
+  <div class="chat-wrapper fu fu3">
+    <img src="assets/zara_ai_avatar.png" alt="Zara AI" class="zara-pop-avatar">
+    <div class="chat-card">
+      <div class="chat-wa-dot">💬</div>
+      <div class="chat-head">
+        <div class="chat-avi">
+          <img src="assets/zara_ai_avatar.png" alt="Zara" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+          <span class="online-dot"></span>
+        </div>
+        <div>
+          <div class="chat-info-name">Zara – AI Concierge</div>
+          <div class="chat-info-status">● Online Now</div>
+        </div>
+        <div class="chat-dots">⋮</div>
+      </div>
+      <div class="chat-bubble">
+        <div id="zara-typing" class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+        <div id="zara-msg" style="display:none;">
+          <b>Welcome to FillHall!</b>
+          Zara, your AI assistant, is here to handle your marquee search. 24/7 support, instant dates, 100% transparency.
+          <br><br><span class="chat-link">Chat now →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Pills -->
+  <div class="pills fu fu4">
+    <div class="pill">📋 Instant Dates</div>
+    <div class="pill">✅ Verified</div>
+    <div class="pill">👥 24/7 Support</div>
+    <div class="pill">💎 No Hidden Fees</div>
+  </div>
+
+  <!-- WhatsApp CTA -->
+  <button class="wa-btn fu fu5" onclick="window.open('https://wa.me/923714877499','_blank')">
+    💬 &nbsp; Message Zara Now on WhatsApp
+  </button>
+
+  <p class="hero-note fu fu5">
+    Save 20 hours of planning instantly &nbsp;·&nbsp; <span>Multan Only</span>
+  </p>
+
+  <img src="assets/couple_illustration.png" alt="Couple Illustration" class="couple-illustration fu fu5">
+</section>
+
+<!-- ══════════════════════════════════
+     FEATURES SECTION
+══════════════════════════════════ -->
+<section class="features-section reveal" id="features">
+  <h2 class="feat-title">The FillHall Guarantee</h2>
+  <div class="feat-grid">
+    <div class="feat-box">
+      <div class="feat-icon">💎</div>
+      <h3>100% Verified</h3>
+      <p>Every venue and vendor is thoroughly vetted for luxury quality and impeccable service.</p>
+    </div>
+    <div class="feat-box">
+      <div class="feat-icon">🛡️</div>
+      <h3>No Hidden Fees</h3>
+      <p>Complete financial transparency from your initial booking all the way to execution.</p>
+    </div>
+    <div class="feat-box">
+      <div class="feat-icon">🤝</div>
+      <h3>24/7 Concierge</h3>
+      <p>Zara AI and our expert human team are always ready to assist you anytime, anywhere.</p>
+    </div>
+  </div>
+</section>
+
+<div class="page-footer">@FILLHALL</div>
+
+
+<!-- ══════════════════════════════════
+     PAGE 2 — DIRECTORY
+══════════════════════════════════ -->
+<section class="directory reveal" id="directory">
+
+  <div class="dir-header">
+    <div class="dir-tag">✦ Multan Exclusive ✦</div>
+    <h2 class="dir-title">Explore Exclusive<br>Multan Partners</h2>
+  </div>
+
+  <!-- Dynamic Venue Cards -->
+  <div class="venues-grid" id="venuesGrid">
+    <div class="loading-cards">Loading venues...</div>
+  </div>
+
+  <!-- CTA Banner -->
+  <div class="cta-wrap">
+    <div class="cta-box">
+      <span class="cta-star">✦</span>
+      <div class="cta-text">
+        <span class="g">Verified Availability</span> – No Hidden Charges<br>
+        – <span class="g">Zara Approved</span>
+      </div>
+      <button class="cta-btn" onclick="window.open('https://wa.me/923714877499','_blank')">
+        💬 &nbsp; View Details &amp; Book on WhatsApp
+      </button>
+      <div class="cta-sub">Every partner meets FillHall's Luxury Guarantee.</div>
+      <img src="assets/couple_illustration.png" alt="Couple Illustration" class="couple-illustration-2">
+    </div>
+  </div>
+
+</section>
+<div class="page-footer">@FILLHALL</div>
+
+
+<script>
+  const DEFAULT_ICON = '✦';
+
+  // Loader & Chat Animation
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').style.opacity = '0';
+      document.getElementById('loader').style.visibility = 'hidden';
+      
+      // Trigger Zara typing after load
+      setTimeout(() => {
+        document.getElementById('zara-typing').style.display = 'none';
+        const msg = document.getElementById('zara-msg');
+        msg.style.display = 'block';
+        msg.style.animation = 'fadeUp 0.6s ease both';
+      }, 2500);
+    }, 1500);
+  });
+
+  // Parallax Background
+  document.addEventListener('mousemove', (e) => {
+    const orb = document.getElementById('parallaxOrb');
+    if (orb) {
+      const x = (window.innerWidth / 2 - e.pageX) * 0.04;
+      const y = (window.innerHeight / 2 - e.pageY) * 0.04;
+      orb.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+    }
+  });
+
+  // Scroll Reveal
+  function reveal() {
+    var reveals = document.querySelectorAll('.reveal');
+    for (var i = 0; i < reveals.length; i++) {
+      var windowHeight = window.innerHeight;
+      var elementTop = reveals[i].getBoundingClientRect().top;
+      var elementVisible = 100;
+      if (elementTop < windowHeight - elementVisible) {
+        reveals[i].classList.add('active');
+      }
+    }
+  }
+  window.addEventListener('scroll', reveal);
+  reveal(); // Trigger on load
+
+  // Secret Admin Access (4 Taps)
+  let adminTaps = 0;
+  let tapTimer;
+  document.getElementById('secretAdminLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    adminTaps++;
+    clearTimeout(tapTimer);
+    if (adminTaps === 4) {
+      window.location.href = 'admin-login.html';
+      adminTaps = 0;
+    } else {
+      tapTimer = setTimeout(() => { adminTaps = 0; }, 1000);
+    }
+  });
+
+  async function loadVenues() {
+    const grid = document.getElementById('venuesGrid');
+    try {
+      const res  = await fetch('/api/listings');
+      if (!res.ok) throw new Error('API error ' + res.status);
+      const data = await res.json();
+
+      if (!data || data.length === 0) {
+        grid.innerHTML = '<div class="loading-cards">No venues added yet.</div>';
+        return;
+      }
+
+      grid.innerHTML = '';
+
+      data.forEach((v, i) => {
+        const icon    = DEFAULT_ICON;
+        const gMin    = v.guest_capacity_min || 200;
+        const gMax    = v.guest_capacity_max || v.guest_capacity || 1000;
+        const loc     = v.location || 'Multan';
+        const budget  = !!v.budget;
+
+        const logoHTML = v.logo
+          ? `<img class="card-logo-img" src="/uploads/${v.logo}" alt="${v.business_name}">`
+          : `<div class="card-icon-wrap">${icon}</div>`;
+
+        const card = document.createElement('div');
+        card.className = 'venue-card fu';
+        card.style.animationDelay = (i * 0.07 + 0.1) + 's';
+
+        card.innerHTML = `
+          ${logoHTML}
+          <div class="card-name">${v.business_name}</div>
+          <span class="card-loc">${loc}</span>
+          <div class="card-features">
+            <div class="card-feat"><span class="cf-pin">📍</span> Venue</div>
+            ${budget ? `<div class="card-feat"><span class="cf-check">✓</span> Budget</div>` : ''}
+            <div class="card-feat"><span class="cf-pax">👥</span> Guest: ${gMin}–${gMax} PAX</div>
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          const num = v.whatsapp_number.replace(/\D/g, '');
+          window.open(`https://wa.me/${num}?text=Hi! I found ${encodeURIComponent(v.business_name)} on FillHall and I'm interested.`, '_blank');
+        });
+
+        grid.appendChild(card);
+      });
+
+    } catch (err) {
+      console.error(err);
+      grid.innerHTML = '<div class="loading-cards">Could not load venues. Make sure server is running.</div>';
+    }
+  }
+
+  loadVenues();
+</script>
+
+</body>
+</html>

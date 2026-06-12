@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FillHall Admin - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ---- Extra admin styles ---- */
+    .logo-preview-wrap {
+      margin-top: 0.5rem;
+    }
+    .logo-preview-wrap img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid rgba(212,175,55,0.4);
+      display: block;
+      margin-top: 0.4rem;
+    }
+    .current-logo-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    .guest-range {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .guest-range .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .table-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid rgba(212,175,55,0.3);
+      vertical-align: middle;
+    }
+    .no-logo-icon {
+      font-size: 1.5rem;
+      vertical-align: middle;
+    }
+    .status-badge {
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03rem;
+    }
+    .status-badge.active {
+      background: rgba(37,211,102,0.15);
+      color: #25d366;
+      border: 1px solid rgba(37,211,102,0.3);
+    }
+    .status-badge.inactive {
+      background: rgba(220,53,69,0.15);
+      color: #ff6b7a;
+      border: 1px solid rgba(220,53,69,0.3);
+    }
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: linear-gradient(135deg, #d4af37, #f1d670);
+      color: #2d0008;
+      padding: 0.9rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      z-index: 9999;
+      display: none;
+      box-shadow: 0 4px 20px rgba(212,175,55,0.4);
+    }
+    .toast.show { display: block; animation: slideUp 0.3s ease; }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-logo">✦ FILLHALL ADMIN ✦</div>
+    <div class="nav-links">
+      <a href="welcome.html" target="_blank">View Website</a>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Dashboard -->
+  <div class="dashboard">
+
+    <!-- Header -->
+    <div class="dashboard-header">
+      <h1>Dashboard Overview</h1>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalListings">0</div>
+        <div class="stat-label">Total Venues</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="activeListings">0</div>
+        <div class="stat-label">Active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="inactiveListings">0</div>
+        <div class="stat-label">Inactive</div>
+      </div>
+    </div>
+
+    <!-- Manage Listings -->
+    <div class="dashboard-section">
+      <h2>
+        Manage Venue Listings
+        <button class="add-btn" id="addListingBtn">+ Add New Venue</button>
+      </h2>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>Venue Name</th>
+              <th>Location</th>
+              <th>Guest Capacity</th>
+              <th>Budget</th>
+              <th>WhatsApp</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="listingsTable">
+            <tr><td colspan="8" style="text-align:center;padding:2rem;color:rgba(255,255,255,0.5);">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== ADD / EDIT MODAL ===== -->
+  <div class="modal" id="listingModal">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2 id="modalTitle">Add New Venue</h2>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+
+      <form id="listingForm" enctype="multipart/form-data">
+        <input type="hidden" id="listingId">
+
+        <!-- Venue Name -->
+        <div class="form-group">
+          <label>Venue / Business Name *</label>
+          <input type="text" id="businessName" placeholder="e.g. Royal Crown" required>
+        </div>
+
+
+
+        <!-- Location -->
+        <div class="form-group">
+          <label>Location *</label>
+          <input type="text" id="location" placeholder="e.g. Multan, Punjab" required>
+        </div>
+
+        <!-- Guest Capacity Range -->
+        <div class="form-group">
+          <label>Guest Capacity (PAX)</label>
+          <div class="guest-range">
+            <div class="form-group">
+              <input type="number" id="guestMin" placeholder="Min (e.g. 200)" min="1">
+            </div>
+            <div class="form-group">
+              <input type="number" id="guestMax" placeholder="Max (e.g. 1000)" min="1">
+            </div>
+          </div>
+        </div>
+
+        <!-- Budget -->
+        <div class="form-group">
+          <label>Budget Range</label>
+          <input type="text" id="budget" placeholder="e.g. 5 Lakh - 20 Lakh">
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="form-group">
+          <label>WhatsApp Number *</label>
+          <input type="text" id="whatsappNumber" placeholder="e.g. 923001234567" required>
+        </div>
+
+        <!-- Logo Upload -->
+        <div class="form-group">
+          <label>Venue Logo / Image</label>
+          <input type="file" id="logo" accept="image/*" onchange="previewLogo(this)">
+          <div class="logo-preview-wrap" id="logoPreviewWrap" style="display:none;">
+            <span class="current-logo-label">Preview:</span>
+            <img id="logoPreview" src="" alt="Logo preview">
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label>Status</label>
+          <select id="status">
+            <option value="active">Active (Visible on website)</option>
+            <option value="inactive">Inactive (Hidden)</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
+          <button type="submit" class="save-btn" id="saveBtn">Save Venue</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us – FillHall Luxury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --gold:        #d4a843;
+      --gold-light:  #f0cc70;
+      --gold-dim:    rgba(212,168,67,0.15);
+      --maroon:      #3b0010;
+      --maroon-mid:  #520015;
+      --maroon-dark: #1e0008;
+      --green:       #25d366;
+      --white:       #ffffff;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--maroon-dark);
+      color: var(--white);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ══════════ NAVBAR ══════════ */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 2.5rem;
+      background: linear-gradient(90deg, rgba(82,0,21,0.95), rgba(59,0,16,0.95));
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(212,168,67,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+    }
+
+    .nav-ring {
+      width: 34px; height: 34px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .nav-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.06rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1rem;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-book {
+      padding: 0.5rem 1.3rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--maroon-dark);
+      border: none;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 3px 14px rgba(212,168,67,0.3);
+      text-decoration: none;
+    }
+    .nav-book:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(212,168,67,0.45); }
+
+    /* ══════════ ABOUT HERO ══════════ */
+    .about-hero {
+      flex: 1;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(100,0,28,0.6) 0%, transparent 60%),
+        linear-gradient(175deg, #1e0008 0%, #420012 50%, #1e0008 100%);
+      padding: 5rem 1.5rem;
+      position: relative;
+      text-align: center;
+    }
+
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(212,168,67,0.4), transparent);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15rem;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(212,168,67,0.08);
+      border: 1px solid rgba(212,168,67,0.22);
+      border-radius: 50px;
+      padding: 0.4rem 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.1rem;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 30px rgba(212,168,67,0.3);
+    }
+
+    .content-box {
+      background: linear-gradient(145deg, rgba(72,0,18,0.5), rgba(26,0,8,0.9));
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(212,168,67,0.3);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .content-box p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 1.5rem;
+    }
+    
+    .content-box p strong {
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+
+    .signature {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-top: 2rem;
+      font-style: italic;
+    }
+
+    .page-footer {
+      text-align: center;
+      padding: 1.2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 0.2rem;
+      border-top: 1px solid rgba(212,168,67,0.12);
+      background: rgba(20,0,6,0.96);
+    }
+
+    @media (max-width: 700px) {
+      .title { font-size: 2.2rem; }
+      .content-box { padding: 2rem 1.5rem; }
+      .content-box p { font-size: 0.95rem; }
+      .navbar { padding: 0.85rem 1.25rem; }
+      .nav-links a { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="nav-brand" href="welcome.html">
+    <div class="nav-ring">✦</div>
+    <span class="nav-name">FillHall</span>
+  </a>
+  <div class="nav-links">
+    <a href="welcome.html">Home</a>
+    <a href="about.html" style="color: var(--gold);">About Us</a>
+    <button class="nav-book" onclick="window.location.href='welcome.html#directory'">Book Now</button>
+  </div>
+</nav>
+
+<section class="about-hero">
+  <div class="badge">✦ Our Story ✦</div>
+  <h1 class="title">Elevating Weddings</h1>
+  
+  <div class="content-box">
+    <p>Welcome to <strong>FillHall</strong>, Multan's premier luxury wedding concierge. We believe that planning your perfect day should be as beautiful and effortless as the wedding itself.</p>
+    <p>With our AI Concierge, <strong>Zara</strong>, we've revolutionized the way you discover and book venues. We eliminate the endless calls, hidden fees, and uncertainty, replacing them with 24/7 support, verified availability, and 100% transparency.</p>
+    <p>Every partner on our platform meets the strict <strong>FillHall Luxury Guarantee</strong>, ensuring your special moments are hosted in venues that reflect elegance, class, and unparalleled service.</p>
+    <p>Your dream wedding begins here.</p>
+    <div class="signature">The FillHall Team</div>
+  </div>
+</section>
+
+<div class="page-footer">@FILLHALL</div>
+
+</body>
+</html>
