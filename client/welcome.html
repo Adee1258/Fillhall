@@ -339,6 +339,8 @@
       height: auto;
       z-index: 5;
       pointer-events: none;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 0 8px rgba(212,168,67,0.15));
     }
 
     .couple-illustration-2 {
@@ -349,6 +351,8 @@
       height: auto;
       z-index: 5;
       pointer-events: none;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 0 6px rgba(212,168,67,0.15));
     }
     @keyframes waPulse {
       0%,100% { box-shadow: 0 6px 24px rgba(37,211,102,0.38); }
@@ -925,9 +929,9 @@
         const loc     = v.location || 'Multan';
         const budget  = !!v.budget;
 
-        // logo can be Cloudinary URL (http...) or local filename
+        // logo: base64 string (data:image/...) or http URL or legacy filename
         const logoSrc = v.logo
-          ? (v.logo.startsWith('http') ? v.logo : `/uploads/${v.logo}`)
+          ? (v.logo.startsWith('data:') || v.logo.startsWith('http') ? v.logo : `/uploads/${v.logo}`)
           : null;
         const logoHTML = logoSrc
           ? `<img class="card-logo-img" src="${logoSrc}" alt="${v.business_name}" onerror="this.parentElement.innerHTML='<div class=card-icon-wrap>${icon}</div>'">`
