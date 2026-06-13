@@ -33,6 +33,28 @@
       flex: 1;
       margin-bottom: 0;
     }
+    .budget-checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(212,175,55,0.25);
+      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--cream);
+      transition: all 0.2s;
+    }
+    .check-item:hover { border-color: var(--gold); background: rgba(212,175,55,0.08); }
+    .check-item input[type="checkbox"] { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; }
+    .check-item:has(input:checked) { border-color: var(--gold); background: rgba(212,175,55,0.15); color: var(--gold); }
     .table-logo {
       width: 40px;
       height: 40px;
@@ -136,13 +158,12 @@
               <th>Location</th>
               <th>Guest Capacity</th>
               <th>Budget</th>
-              <th>WhatsApp</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody id="listingsTable">
-            <tr><td colspan="8" style="text-align:center;padding:2rem;color:rgba(255,255,255,0.5);">Loading...</td></tr>
+            <tr><td colspan="7" style="text-align:center;padding:2rem;color:rgba(255,255,255,0.5);">Loading...</td></tr>
           </tbody>
         </table>
       </div>
@@ -189,10 +210,17 @@
           </div>
         </div>
 
-        <!-- Budget -->
+        <!-- Budget Checkboxes -->
         <div class="form-group">
-          <label>Budget Range</label>
-          <input type="text" id="budget" placeholder="e.g. 5 Lakh - 20 Lakh">
+          <label>Budget Range (select all that apply)</label>
+          <div class="budget-checks">
+            <label class="check-item"><input type="checkbox" name="budget" value="1 Lakh - 3 Lakh"> 1L – 3L</label>
+            <label class="check-item"><input type="checkbox" name="budget" value="3 Lakh - 5 Lakh"> 3L – 5L</label>
+            <label class="check-item"><input type="checkbox" name="budget" value="5 Lakh - 10 Lakh"> 5L – 10L</label>
+            <label class="check-item"><input type="checkbox" name="budget" value="10 Lakh - 20 Lakh"> 10L – 20L</label>
+            <label class="check-item"><input type="checkbox" name="budget" value="20 Lakh - 50 Lakh"> 20L – 50L</label>
+            <label class="check-item"><input type="checkbox" name="budget" value="50 Lakh+"> 50L+</label>
+          </div>
         </div>
 
         <!-- WhatsApp -->

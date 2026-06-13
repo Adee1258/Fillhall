@@ -80,7 +80,7 @@ function renderTable(listings) {
 
   if (!listings || listings.length === 0) {
     tbody.innerHTML =
-      '<tr><td colspan="8" style="text-align:center;color:rgba(255,255,255,0.5);padding:2rem;">Koi venue nahi mila. "+ Add New Venue" se add karein.</td></tr>';
+      '<tr><td colspan="7" style="text-align:center;color:rgba(255,255,255,0.5);padding:2rem;">Koi venue nahi mila. "+ Add New Venue" se add karein.</td></tr>';
     return;
   }
 
@@ -105,7 +105,6 @@ function renderTable(listings) {
       <td>${listing.location || '—'}</td>
       <td>${guestDisplay}</td>
       <td>${listing.budget || '—'}</td>
-      <td>${listing.whatsapp_number}</td>
       <td><span class="status-badge ${statusClass}">${listing.status}</span></td>
       <td>
         <div class="action-btns">
@@ -129,6 +128,7 @@ document.getElementById('addListingBtn').addEventListener('click', () => {
   form.reset();
   document.getElementById('listingId').value = '';
   document.getElementById('logoPreviewWrap').style.display = 'none';
+  document.querySelectorAll('input[name="budget"]').forEach(cb => cb.checked = false);
   modal.classList.add('active');
 });
 
@@ -154,9 +154,13 @@ async function editListing(id) {
     document.getElementById('location').value        = listing.location        || '';
     document.getElementById('guestMin').value        = listing.guest_capacity_min || listing.guest_capacity || '';
     document.getElementById('guestMax').value        = listing.guest_capacity_max || '';
-    document.getElementById('budget').value          = listing.budget          || '';
     document.getElementById('whatsappNumber').value  = listing.whatsapp_number || '';
     document.getElementById('status').value          = listing.status          || 'active';
+
+    // Restore budget checkboxes
+    document.querySelectorAll('input[name="budget"]').forEach(cb => {
+      cb.checked = listing.budget ? listing.budget.includes(cb.value) : false;
+    });
 
     // Show existing logo
     const previewWrap = document.getElementById('logoPreviewWrap');
@@ -243,7 +247,7 @@ form.addEventListener('submit', async (e) => {
     guest_capacity_min: document.getElementById('guestMin').value,
     guest_capacity_max: document.getElementById('guestMax').value,
     guest_capacity:     document.getElementById('guestMax').value || document.getElementById('guestMin').value,
-    budget:             document.getElementById('budget').value.trim(),
+    budget:             Array.from(document.querySelectorAll('input[name="budget"]:checked')).map(c => c.value).join(', '),
     whatsapp_number:    document.getElementById('whatsappNumber').value.trim(),
     status:             document.getElementById('status').value
   };
