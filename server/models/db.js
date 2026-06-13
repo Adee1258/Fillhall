@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const dns = require('dns');
 
-// Force IPv4 first — fixes DNS SRV timeout on many Pakistani ISPs
 dns.setDefaultResultOrder('ipv4first');
 
 const listingSchema = new mongoose.Schema({
@@ -20,18 +19,36 @@ const listingSchema = new mongoose.Schema({
 
 const Listing = mongoose.model('Listing', listingSchema);
 
-const initDatabase = async () => {
+// Cache connection across serverless invocations
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected && mongoose.connection.readyState === 1) return;
+
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 15000,
-      socketTimeoutMS: 45000,
-      family: 4
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 30000,
+      family: 4,
+      maxPoolSize: 5,
+      bufferCommands: false
     });
+    isConnected = true;
     console.log('MongoDB connected ✓');
   } catch (error) {
+    isConnected = false;
     console.error('MongoDB connection error:', error.message);
-    console.log('Server will continue running — DB features may not work until connection is established.');
+    throw error;
   }
 };
 
-module.exports = { Listing, initDatabase };
+// Called at startup (non-blocking)
+const initDatabase = async () => {
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('DB init error:', err.message);
+  }
+};
+
+module.exports = { Listing, initDatabase, connectDB };

@@ -1,7 +1,8 @@
-const { Listing } = require('../models/db');
+const { Listing, connectDB } = require('../models/db');
 
 const getAllListings = async (req, res) => {
   try {
+    await connectDB();
     const listings = await Listing.find({ status: 'active' }).sort({ createdAt: -1 });
     res.json(listings);
   } catch (error) {
@@ -11,6 +12,7 @@ const getAllListings = async (req, res) => {
 
 const getListingById = async (req, res) => {
   try {
+    await connectDB();
     const listing = await Listing.findById(req.params.id);
     if (!listing) return res.status(404).json({ message: 'Listing not found' });
     res.json(listing);
@@ -21,14 +23,12 @@ const getListingById = async (req, res) => {
 
 const createListing = async (req, res) => {
   try {
+    await connectDB();
     const data = { ...req.body };
-
-    // Handle base64 image from body (logo_base64 field)
     if (req.body.logo_base64) {
       data.logo = req.body.logo_base64;
       delete data.logo_base64;
     }
-
     if (!data.status) data.status = 'active';
     const listing = new Listing(data);
     await listing.save();
@@ -40,14 +40,12 @@ const createListing = async (req, res) => {
 
 const updateListing = async (req, res) => {
   try {
+    await connectDB();
     const data = { ...req.body };
-
-    // Handle base64 image from body
     if (req.body.logo_base64) {
       data.logo = req.body.logo_base64;
       delete data.logo_base64;
     }
-
     const listing = await Listing.findByIdAndUpdate(req.params.id, data, { new: true });
     if (!listing) return res.status(404).json({ message: 'Listing not found' });
     res.json({ message: 'Listing updated successfully' });
@@ -58,6 +56,7 @@ const updateListing = async (req, res) => {
 
 const deleteListing = async (req, res) => {
   try {
+    await connectDB();
     const listing = await Listing.findByIdAndDelete(req.params.id);
     if (!listing) return res.status(404).json({ message: 'Listing not found' });
     res.json({ message: 'Listing deleted successfully' });
@@ -68,6 +67,7 @@ const deleteListing = async (req, res) => {
 
 const getDashboardStats = async (req, res) => {
   try {
+    await connectDB();
     const total    = await Listing.countDocuments();
     const active   = await Listing.countDocuments({ status: 'active' });
     const inactive = await Listing.countDocuments({ status: 'inactive' });
@@ -79,6 +79,7 @@ const getDashboardStats = async (req, res) => {
 
 const getAllListingsAdmin = async (req, res) => {
   try {
+    await connectDB();
     const listings = await Listing.find().sort({ createdAt: -1 });
     res.json(listings);
   } catch (error) {
