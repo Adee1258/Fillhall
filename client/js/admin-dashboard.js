@@ -154,13 +154,11 @@ async function editListing(id) {
     document.getElementById('location').value        = listing.location        || '';
     document.getElementById('guestMin').value        = listing.guest_capacity_min || listing.guest_capacity || '';
     document.getElementById('guestMax').value        = listing.guest_capacity_max || '';
-    document.getElementById('whatsappNumber').value  = listing.whatsapp_number || '';
     document.getElementById('status').value          = listing.status          || 'active';
 
-    // Restore budget checkboxes
-    document.querySelectorAll('input[name="budget"]').forEach(cb => {
-      cb.checked = listing.budget ? listing.budget.includes(cb.value) : false;
-    });
+    // Restore budget checkbox
+    const budgetCb = document.querySelector('input[name="budget"]');
+    if (budgetCb) budgetCb.checked = !!(listing.budget && listing.budget.length > 0);
 
     // Show existing logo
     const previewWrap = document.getElementById('logoPreviewWrap');
@@ -247,8 +245,8 @@ form.addEventListener('submit', async (e) => {
     guest_capacity_min: document.getElementById('guestMin').value,
     guest_capacity_max: document.getElementById('guestMax').value,
     guest_capacity:     document.getElementById('guestMax').value || document.getElementById('guestMin').value,
-    budget:             Array.from(document.querySelectorAll('input[name="budget"]:checked')).map(c => c.value).join(', '),
-    whatsapp_number:    document.getElementById('whatsappNumber').value.trim(),
+    budget:             document.querySelector('input[name="budget"]:checked') ? 'Budget Available' : '',
+    whatsapp_number:    '923714877499',
     status:             document.getElementById('status').value
   };
 
