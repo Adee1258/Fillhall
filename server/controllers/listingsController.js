@@ -6,6 +6,7 @@ const getAllListings = async (req, res) => {
     const listings = await Listing.find({ status: 'active' }).sort({ createdAt: -1 });
     res.json(listings);
   } catch (error) {
+    console.error('getAllListings error:', error.message, error.stack);
     res.status(500).json({ message: 'Error fetching listings', error: error.message });
   }
 };
