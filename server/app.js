@@ -33,11 +33,17 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error', error: err.message });
 });
 
-// Start
-initDatabase().then(() => {
+// Initialize DB connection (non-blocking for serverless)
+initDatabase().catch(err => {
+  console.error('DB init error:', err.message);
+});
+
+// Local dev only — Vercel ignores this
+if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
-}).catch(err => {
-  console.error('Failed to start:', err);
-});
+}
+
+// Export for Vercel serverless
+module.exports = app;
