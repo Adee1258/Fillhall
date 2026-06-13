@@ -547,7 +547,7 @@
       background: linear-gradient(135deg, rgba(70,0,18,0.95), rgba(26,0,8,0.98));
       border: 1px solid rgba(212,168,67,0.35);
       border-radius: 16px;
-      padding: 1.2rem 1.5rem;
+      padding: 1.2rem 1.5rem 1.5rem;
       position: relative;
       overflow: hidden;
       text-align: center;
@@ -613,12 +613,12 @@
         scroll-snap-type: x mandatory;
         gap: 0.75rem;
         padding-bottom: 1.5rem;
-        scrollbar-width: none; /* Firefox */
+        scrollbar-width: none;
       }
-      .venues-grid::-webkit-scrollbar { display: none; /* Safari and Chrome */ }
+      .venues-grid::-webkit-scrollbar { display: none; }
       .venue-card {
         flex: 0 0 auto;
-        width: calc(100% / 3.5); /* Shows ~3.5 cards */
+        width: calc(100% / 3.5);
         scroll-snap-align: start;
         padding: 1rem 0.6rem;
       }
@@ -631,12 +631,27 @@
       .hero-title { font-size: 2.4rem; }
       .navbar { padding: 0.85rem 1.25rem; }
       .nav-links a:not(:last-child) { display: none; }
+
+      /* Hide hero couple on mobile — hero is already crowded */
+      .couple-illustration { display: none; }
+
+      /* CTA couple — smaller, non-overlapping on mobile */
+      .couple-illustration-2 {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        width: 70px;
+        display: block;
+        margin: 0.6rem auto 0;
+        mix-blend-mode: lighten;
+      }
     }
 
     @media (max-width: 420px) {
       .venue-card { width: calc(100% / 3.2); }
       .hero-title { font-size: 2rem; }
       .dir-title { font-size: 1.3rem; }
+      .couple-illustration-2 { width: 55px; }
     }
 
     /* ══════════ FEATURES SECTION ══════════ */
