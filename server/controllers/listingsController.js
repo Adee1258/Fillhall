@@ -1,13 +1,5 @@
 const { Listing } = require('../models/db');
 
-// Helper — get logo value from uploaded file
-function getLogoValue(file) {
-  if (!file) return null;
-  // Cloudinary returns file.path as full URL
-  // Local disk returns file.filename
-  return file.path || file.filename || null;
-}
-
 const getAllListings = async (req, res) => {
   try {
     const listings = await Listing.find({ status: 'active' }).sort({ createdAt: -1 });
@@ -30,8 +22,13 @@ const getListingById = async (req, res) => {
 const createListing = async (req, res) => {
   try {
     const data = { ...req.body };
-    const logo = getLogoValue(req.file);
-    if (logo) data.logo = logo;
+
+    // Handle base64 image from body (logo_base64 field)
+    if (req.body.logo_base64) {
+      data.logo = req.body.logo_base64;
+      delete data.logo_base64;
+    }
+
     if (!data.status) data.status = 'active';
     const listing = new Listing(data);
     await listing.save();
@@ -44,8 +41,13 @@ const createListing = async (req, res) => {
 const updateListing = async (req, res) => {
   try {
     const data = { ...req.body };
-    const logo = getLogoValue(req.file);
-    if (logo) data.logo = logo;
+
+    // Handle base64 image from body
+    if (req.body.logo_base64) {
+      data.logo = req.body.logo_base64;
+      delete data.logo_base64;
+    }
+
     const listing = await Listing.findByIdAndUpdate(req.params.id, data, { new: true });
     if (!listing) return res.status(404).json({ message: 'Listing not found' });
     res.json({ message: 'Listing updated successfully' });

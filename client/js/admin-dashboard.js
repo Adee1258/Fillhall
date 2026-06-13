@@ -85,9 +85,7 @@ function renderTable(listings) {
   }
 
   listings.forEach(listing => {
-    const logoSrc = listing.logo
-      ? (listing.logo.startsWith('http') ? listing.logo : `/uploads/${listing.logo}`)
-      : null;
+    const logoSrc = listing.logo || null;
     const logoHTML = logoSrc
       ? `<img class="table-logo" src="${logoSrc}" alt="logo" onerror="this.style.display='none'">`
       : `<span class="no-logo-icon">🏛️</span>`;
@@ -164,9 +162,7 @@ async function editListing(id) {
     const previewWrap = document.getElementById('logoPreviewWrap');
     const previewImg  = document.getElementById('logoPreview');
     if (listing.logo) {
-      previewImg.src = listing.logo.startsWith('http')
-        ? listing.logo
-        : `/uploads/${listing.logo}`;
+      previewImg.src = listing.logo; // base64 or URL — works directly as src
       previewWrap.style.display = 'block';
     } else {
       previewWrap.style.display = 'none';
@@ -201,6 +197,16 @@ async function deleteListing(id, name) {
 }
 window.deleteListing = deleteListing;
 
+// ===== HELPER — file to base64 =====
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = (e) => resolve(e.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 // ===== FORM SUBMIT (Create / Update) =====
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -209,20 +215,28 @@ form.addEventListener('submit', async (e) => {
   saveBtn.textContent = 'Saving...';
   saveBtn.disabled    = true;
 
-  const formData = new FormData();
-  formData.append('business_name',       document.getElementById('businessName').value.trim());
-  formData.append('location',            document.getElementById('location').value.trim());
-  formData.append('guest_capacity_min',  document.getElementById('guestMin').value);
-  formData.append('guest_capacity_max',  document.getElementById('guestMax').value);
-  // Keep legacy guest_capacity as max for backward compat
-  formData.append('guest_capacity',      document.getElementById('guestMax').value || document.getElementById('guestMin').value);
-  formData.append('budget',              document.getElementById('budget').value.trim());
-  formData.append('whatsapp_number',     document.getElementById('whatsappNumber').value.trim());
-  formData.append('status',              document.getElementById('status').value);
+  const payload = {
+    business_name:      document.getElementById('businessName').value.trim(),
+    location:           document.getElementById('location').value.trim(),
+    guest_capacity_min: document.getElementById('guestMin').value,
+    guest_capacity_max: document.getElementById('guestMax').value,
+    guest_capacity:     document.getElementById('guestMax').value || document.getElementById('guestMin').value,
+    budget:             document.getElementById('budget').value.trim(),
+    whatsapp_number:    document.getElementById('whatsappNumber').value.trim(),
+    status:             document.getElementById('status').value
+  };
 
+  // Convert image to base64 if selected
   const logoFile = document.getElementById('logo').files[0];
   if (logoFile) {
-    formData.append('logo', logoFile);
+    try {
+      payload.logo_base64 = await fileToBase64(logoFile);
+    } catch (err) {
+      showToast('Image convert karne mein error.', true);
+      saveBtn.textContent = 'Save Venue';
+      saveBtn.disabled    = false;
+      return;
+    }
   }
 
   try {
@@ -230,14 +244,20 @@ form.addEventListener('submit', async (e) => {
     if (editingId) {
       res = await fetch(`/api/listings/${editingId}`, {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
       });
     } else {
       res = await fetch('/api/listings', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
       });
     }
 
