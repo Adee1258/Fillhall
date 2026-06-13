@@ -16,16 +16,40 @@
       "dest": "server/app.js"
     },
     {
-      "src": "/uploads/(.*)",
-      "dest": "server/app.js"
+      "src": "/welcome.html",
+      "dest": "client/welcome.html"
     },
     {
-      "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|webp|svg|ico))",
-      "dest": "client/$1"
+      "src": "/index.html",
+      "dest": "client/index.html"
     },
     {
-      "src": "/(.*)",
-      "dest": "server/app.js"
+      "src": "/about.html",
+      "dest": "client/about.html"
+    },
+    {
+      "src": "/admin-dashboard.html",
+      "dest": "client/admin-dashboard.html"
+    },
+    {
+      "src": "/admin-login.html",
+      "dest": "client/admin-login.html"
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "client/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "client/js/$1"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "client/assets/$1"
+    },
+    {
+      "src": "/",
+      "dest": "client/welcome.html"
     }
   ]
 }

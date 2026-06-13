@@ -14,17 +14,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use(express.static(path.join(__dirname, '../client')));
-
 // API routes
 app.use('/api/auth',     authRoutes);
 app.use('/api/listings', listingsRoutes);
 
-// Root
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/welcome.html'));
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
 });
 
 // Global error handler
