@@ -207,31 +207,21 @@ function fileToBase64(file) {
       img.src = e.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800;
-        const MAX_HEIGHT = 800;
-        let width = img.width;
-        let height = img.height;
+        // Max 400px — keeps base64 small (under 100KB)
+        const MAX = 400;
+        let w = img.width;
+        let h = img.height;
+        if (w > h) { if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; } }
+        else        { if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; } }
 
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height = Math.round(height * (MAX_WIDTH / width));
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width = Math.round(width * (MAX_HEIGHT / height));
-            height = MAX_HEIGHT;
-          }
-        }
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
 
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // Compress to JPEG to prevent Vercel 4.5MB limit errors
-        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-        resolve(compressedBase64);
+        // JPEG quality 0.75 — good quality, small size
+        const base64 = canvas.toDataURL('image/jpeg', 0.75);
+        console.log('Image compressed:', Math.round(base64.length / 1024) + 'KB');
+        resolve(base64);
       };
       img.onerror = reject;
     };
@@ -299,8 +289,16 @@ form.addEventListener('submit', async (e) => {
       fetchStats();
       fetchListings();
     } else {
-      const err = await res.json();
-      showToast(err.message || 'Save fail ho gaya.', true);
+      let errMsg = 'Save fail ho gaya.';
+      try {
+        const errData = await res.json();
+        errMsg = errData.message || errMsg;
+        console.error('Server error:', errData);
+      } catch(e) {
+        console.error('Response status:', res.status, res.statusText);
+        errMsg = `Server error ${res.status}`;
+      }
+      showToast(errMsg, true);
     }
   } catch (err) {
     console.error('Save error:', err);
